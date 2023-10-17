@@ -17,10 +17,10 @@ This repository contains:
 * src - 6502 assembler code
 * utils - other utility scripts
 
-See also:
-* [src/REDAME.md]
-* [hardware/pcb/README.md]
-* [hardware/breadboard/README.md]
+See also other READMEs:
+* [src/README.md](src/README.md)
+* [hardware/pcb/README.md](hardware/pcb/README.md)
+* [hardware/breadboard/README.md](hardware/breadboard/README.md)
 
 # Building
 
