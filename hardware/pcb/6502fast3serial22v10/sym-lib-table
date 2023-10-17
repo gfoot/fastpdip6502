@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "pldserial")(type "KiCad")(uri "${KIPRJMOD}/pldserial.kicad_sym")(options "")(descr ""))
+)

@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "6502fast2")(type "KiCad")(uri "${KIPRJMOD}/6502fast3cpu.pretty")(options "")(descr ""))
+)

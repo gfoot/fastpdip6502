@@ -1,0 +1,31 @@
+(kicad_sch (version 20230121) (generator eeschema)
+
+  (uuid 4a496890-9359-45f2-829d-173320e6774b)
+
+  (paper "A4")
+
+  (lib_symbols
+  )
+
+
+  (sheet (at 106.68 41.91) (size 24.13 83.82) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid 5a64de44-8a2d-496d-81ef-f22c2c7396f3)
+    (property "Sheetname" "IO module" (at 106.68 41.1984 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "iomodule.kicad_sch" (at 106.68 126.3146 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "6502fast3io"
+        (path "/4a496890-9359-45f2-829d-173320e6774b" (page "2"))
+      )
+    )
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

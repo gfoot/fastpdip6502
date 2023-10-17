@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "6502fast_plds")(type "KiCad")(uri "C:/Users/gfoot/Documents/PCB/6502fast3/6502fast_plds.kicad_sym")(options "")(descr ""))
+)
