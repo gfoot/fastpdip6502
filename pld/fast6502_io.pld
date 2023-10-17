@@ -1,0 +1,41 @@
+Name     fast6502_io ;
+PartNo   09.00.0.A ;
+Date     25/07/2023 ;
+Revision 00 ;
+Designer George Foot ;
+Company  gfoot360 ;
+Assembly None ;
+Location None ;
+Device   g16v8 ;
+
+
+/* I/O PLD for "fast" PDIP 6502 project */
+
+pin 1 = CLK;                     /* Inverted I/O clock */
+
+/* inputs */
+
+pin [ 2..8, 9, 17 ] = [ A8..A14, A7, A6 ];  /* CPU's address bus */
+pin 19 = IOWAIT;                 /* CPU is waiting for I/O operation */
+
+/* outputs */
+
+pin 18 = IOWAITS;                /* Synchronous version of IOWAIT, one cycle only, for metastability protection */
+pin 16 = !ACT;                   /* Goes low for one clock cycle after IOWAITS */
+pin 12 = !ROM;                   /* Operation is ROM access */
+pin 15 = !RAM;                   /* Operation is RAM access */
+
+
+Field ADDR = [ A14..A6 ];
+
+addr_is_mmio = ADDR:[7f00..7fbf];
+addr_is_ram = ADDR:[0000..3fff];
+
+IOWAITS.d = IOWAIT & !IOWAITS & !ACT;
+
+next_is_active = IOWAITS & !ACT;
+ACT.d = next_is_active;
+
+ROM.d = !(!next_is_active # addr_is_mmio/* # addr_is_ram*/);
+RAM.d = next_is_active & addr_is_ram;
+

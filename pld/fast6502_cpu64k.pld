@@ -1,0 +1,55 @@
+Name     fast6502_cpu64k ;
+PartNo   09.00.00.C ;
+Date     01/09/2023 ;
+Revision 00 ;
+Designer George Foot ;
+Company  gfoot360 ;
+Assembly None ;
+Location None ;
+Device   g16v8 ;
+
+
+/* CPU management PLD for "fast" PDIP 6502 project
+ *
+ * Take 2 - fast6502_cpu.pld didn't work well in the system.  I think this was due to clock phase issues, which
+ * are very sensitive in this computer.  This is an attempt to retain some of the bits that work well in a PLD,
+ * such as address decoding, while letting the discrete ICs deal with clock generation and IOWAIT tracking.
+ *
+ * This replaces the '139 and one of the address bus transceivers in the original circuit.
+ *
+ * It is an asynchronous design, all outputs are combinatorial.
+ *
+ * The main extension over the original support is to allow nearly 64K of RAM rather than just 32K, by reducing
+ * the memory region that's mapped to ROM and I/O.  This doesn't require any changes to the I/O module.
+ *
+ * There is a spare pin which could potentially be used to inhibit ROM decoding, allowing fast execution from 
+ * RAM even for the vectors.
+ */
+
+
+/* inputs */
+
+pin [ 1..9, 11 ] = [ PHI2, A8..A14, RWB, A15 ];
+
+pin 19 = ROMDIS;
+
+/* outputs */
+
+pin [ 12..18 ] = [ XRWB, NA15, IO, !RAMOE, !RAMWE, !IORD, XA8 ];
+
+/* logic */
+
+Field AddrHi = [ A15..A8 ];
+
+NA15 = !A15;   /* inverted A15 to allow selection of second RAM bank */
+
+XRWB = RWB;    /* buffered RWB for I/O module */
+XA8 = A8;      /* buffered A8 for I/O module */
+
+io = A15 & A14 & A13 & A12 & A11 & A10 & A9;
+IO = io;
+
+IORD = io & RWB;              /* I/O read cycles - reverses direction of data bus transceiver */
+RAMOE = !io & RWB;            /* non-I/O read cycles */
+RAMWE = (io # !RWB) & PHI2;   /* all write cycles write to RAM, as well as I/O read cycles - allows writing behind ROM, etc */
+

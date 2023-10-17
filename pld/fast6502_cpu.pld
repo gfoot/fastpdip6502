@@ -1,0 +1,53 @@
+Name     fast6502_cpu ;
+PartNo   09.00.0.B ;
+Date     15/08/2023 ;
+Revision 00 ;
+Designer George Foot ;
+Company  gfoot360 ;
+Assembly None ;
+Location None ;
+Device   g16v8 ;
+
+
+/* CPU management PLD for "fast" PDIP 6502 project
+ *
+ * This replaces a quad OR, a pair of D flipflops, and a '139 decoder pair.
+ *
+ * Differences to hardware implementation:
+ *
+ *   * In hardware RAMWE was qualified by PHI2; here it's qualified by ICLK
+ *   * In hardware RAMOE was qualified by PHI2; here it's not qualified
+ *   * In hardware, IOWAIT is async-reset by CLRIOWAIT; here it's cleared synchronously on the next clock
+ *
+ * On the last point, this adds an extra cycle of clock-stretching, and may also potentially confuse the I/O module.
+ * It is better for metastability protection this way, but could be changed if it causes problems.
+ */
+
+pin 1 = CLK;
+
+/* inputs */
+
+pin [ 2..5 ] = [ ICLK, A15, RWB, !IOREADY ];
+
+/* outputs */
+
+pin 19 = IOWAIT;
+pin 14 = CLRIOWAIT;                 /* Synchronous version of IOREADY, one cycle only, for metastability protection */
+
+pin 18 = PHI2;
+pin 17 = !RAMWE;
+pin 16 = !RAMOE;
+pin 15 = !IORD;
+pin 13 = JKCLK;
+
+IOWAIT.d = A15 & (!IOWAIT # !CLRIOWAIT);
+CLRIOWAIT.d = IOREADY & IOWAIT;  /* Copy IOREADY so long as IOWAIT is true, and always clear after one cycle */
+
+JCLK = ICLK;
+intphi2 = (!JCLK # IOWAIT) & !CLRIOWAIT;    /* Hold PHI2 high if IOWAIT is set unless CLRIOWAIT is set */
+PHI2 = intphi2;
+
+RAMOE = !A15 & RWB;          /* RAM output enable during read cycles on low addresses */
+RAMWE = !A15 & !RWB & PHI2;  /* RAM write enable during write cycles on low addresses while clock is high */
+IORD = A15 & RWB;            /* Reverse the data bus transceiver to the I/O module during I/O read operations */
+

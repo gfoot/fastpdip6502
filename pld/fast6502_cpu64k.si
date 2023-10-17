@@ -1,0 +1,60 @@
+Name     fast6502_cpu64k ;
+PartNo   09.00.00.C ;
+Date     28/08/2023 ;
+Revision 00 ;
+Designer George Foot ;
+Company  gfoot360 ;
+Assembly None ;
+Location None ;
+Device   g16v8 ;
+
+
+/* in - PHI2, AddrHi, RWB */
+
+/* out - NA15, XRWB, XA8, IO, !RAMOE, !RAMWE, !IORD */
+
+ORDER: A15, %1, NA15;
+
+VECTORS:
+0 H
+1 L
+
+ORDER: RWB, %1, XRWB;
+
+VECTORS:
+0 L
+1 H
+
+ORDER: A8, %1, XA8;
+
+VECTORS:
+0 L
+1 H
+
+ORDER: AddrHi, %1, IO;
+
+VECTORS:
+'00' L
+'7F' L
+'BF' L
+'DF' L
+'EF' L
+'F7' L
+'FB' L
+'FC' L
+'FD' L
+'FE' H
+'FF' H
+
+ORDER: AddrHi, %1, RWB, PHI2, %2, IORD, RAMOE, RAMWE;
+
+VECTORS:
+'00' 10  LHL
+'00' 11  LHL
+'00' 00  LLL
+'00' 01  LLH
+'FF' 10  HLL
+'FF' 11  HLH
+'FF' 00  LLL
+'FF' 01  LLH
+

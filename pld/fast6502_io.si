@@ -1,0 +1,53 @@
+Name     fast6502_io ;
+PartNo   09.00.00.A ;
+Date     25/07/2023 ;
+Revision 00 ;
+Designer George Foot ;
+Company  gfoot360 ;
+Assembly None ;
+Location None ;
+Device   g16v8 ;
+
+
+/* in - (CLK) IOWAIT A14..A6 */
+
+/* out - !IO, !ROM, IOWAITS */
+
+ORDER: CLK, %1, IOWAIT, ADDR, %1, IOWAITS, ACT, ROM;
+
+VECTORS:
+
+P 0 '0' 011
+0 0 '0' LLL
+
+$msg "Low ROM address";
+0 1 '80' LLL
+C 1 '80' HLL
+C 1 '80' LHH
+C 1 '80' LLL
+
+$msg "Non-I/O address";
+0 0 '80' LLL
+C 0 '80' LLL
+C 0 '80' LLL
+
+$msg "High ROM address";
+0 1 '1ff' LLL
+C 1 '1ff' HLL
+C 1 '1ff' LHH
+C 1 '1ff' LLL
+
+$msg "I/O address";
+0 1 '1fe' LLL
+C 1 '1fe' HLL
+C 1 '1fe' LHL
+C 1 '1fe' LLL
+
+/*
+$msg "Mode 0 - non-lock addresses";
+P 000 '0' 1 '3'
+0 010 '0' L "0"
+C 010 '0' L "0"
+C 000 '0' L "0"
+*/
+
